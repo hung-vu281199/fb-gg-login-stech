@@ -37,6 +37,7 @@
             firebase.auth().signInWithPopup(provider).then(function (result) {
                 var token = result.credential.accessToken; //Token facebook của user
                 var user = result.user; //Thông tin của user
+                console.log("token: ", token);
                 console.log(user)
             }).catch(function (error) {
                 console.log(error);
