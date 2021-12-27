@@ -67,9 +67,8 @@
                 // The firebase.auth.AuthCredential type that was used.
                 var credential = error.credential;
                 ////////////// ...
-                firebase.auth().fetchSignInMethodsForEmail(error.email)
-                .then(providers => {
-                    console.log("account ne: ", error.credential);
+                // firebase.auth().fetchSignInMethodsForEmail(error.email)
+                // .then(providers => {
                     firebase.auth().signInWithCredential(error.credential)
                     .then(user => {
                         console.log('Facebook>>', user);
@@ -78,7 +77,7 @@
                     .catch(error => console.log(error))});
 
                                 ////////////// console.error('Error: hande error here>Facebook>>', error.code)
-                });
+                // });
             }, false)
         //jquery 
 }())
