@@ -1,15 +1,12 @@
-<!-- <div class="form-group text-center">
+<div class="form-group text-center">
     <button class="btn btn-block btn-social btn-google" id="btnGoogle" type="button"> <span class="fa fa-google"></span>Login with Google</button>
 </div>
 <div class="form-group text-center">
     <button class="btn btn-block btn-social btn-facebook" id="btnFacebook" type="button"> <span class="fa fa-facebook"></span>Login with Facebook</button>
-</div> -->
-
-<button onclick = "facebookSignin()">Facebook Signin</button>
-<button onclick = "facebookSignout()">Facebook Signout</button>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase.js"></script>
-<!-- <script>
+<script>
     (function() {
     console.log('Start file login with firebase');
     // Initialize Firebase
@@ -70,70 +67,25 @@
                 // The firebase.auth.AuthCredential type that was used.
                 var credential = error.credential;
                 ////////////// ...
-                // firebase.auth().fetchSignInMethodsForEmail(error.email)
-                // .then(providers => {
-                    firebase.auth().signInWithCredential(error.credential)
-                    .then(user => {
-                        console.log('Facebook>>', user);
-                        // user.linkWithCredential(error.credential)
-                    })
-                    .catch(error => console.log("error facebook:", error))});
+                if (err.email && err.credential && err.code === 'auth/account-exists-with-different-credential') {
+                const providers = await firebase.auth().fetchSignInMethodsForEmail(err.email)
+                const firstPopupProviderMethod = providers.find(p => supportedPopupSignInMethods.includes(p));
 
+                // Test: Could this happen with email link then trying social provider?
+                if (!firstPopupProviderMethod) {
+                    throw new Error(`Your account is linked to a provider that isn't supported.`);
+                }
+
+                const linkedProvider = getProvider(firstPopupProviderMethod);
+                linkedProvider.setCustomParameters({ login_hint: err.email });
+
+                const result = await firebase.auth().signInWithPopup(linkedProvider);
+                result.user.linkWithCredential(err.credential);
+                console.log("success: ", result);
                                 ////////////// console.error('Error: hande error here>Facebook>>', error.code)
-                // });
-            }, false)
+                };
+            });
+        }, false)
         //jquery 
 }())
-</script> -->
-
-<script>
-    var config = {
-        apiKey: "AIzaSyAip4hecOJfi2iYN-iMBzWaCi9965XgBXg",
-        authDomain: "stech-login.firebaseapp.com",
-        databaseURL: "https://stech-login-default-rtdb.asia-southeast1.firebasedatabase.app/",
-        projectId: "stech-login",
-        storageBucket: "stech-login.appspot.com",
-        messagingSenderId: "47306739642",
-        appId: "1:47306739642:web:81dbe404d0f3a3e5add783",
-        measurementId: "G-DKPY2G15WY"
-    };
-    firebase.initializeApp(config);
-    var database = firebase.database();
- 
-    (function(d, s, id) {
-       var js, fjs = d.getElementsByTagName(s)[0];
-       if (d.getElementById(id)) {return;}
-       js = d.createElement(s); js.id = id;
-       js.src = "http://connect.facebook.net/en_US/sdk.js";
-       fjs.parentNode.insertBefore(js, fjs);
-    } (document, 'script', 'facebook-jssdk'));
-
-
-    var provider = new firebase.auth.FacebookAuthProvider();
-
-function facebookSignin() {
-   firebase.auth().signInWithPopup(provider)
-   
-   .then(function(result) {
-      var token = result.credential.accessToken;
-      var user = result.user;
-		
-      console.log(token)
-      console.log(user)
-   }).catch(function(error) {
-      console.log(error.code);
-      console.log(error.message);
-   });
-}
-
-function facebookSignout() {
-   firebase.auth().signOut()
-   
-   .then(function() {
-      console.log('Signout successful!')
-   }, function(error) {
-      console.log('Signout failed')
-   });
-}
-     
- </script>
+</script>
