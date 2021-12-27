@@ -1,13 +1,13 @@
-<div class="form-group text-center">
-    <button class="btn btn-block btn-social btn-google" id="btnGoogle" type="button"> <span class="fa fa-google"></span>Login with Google</button>
-</div>
-<div class="form-group text-center">
-    <button class="btn btn-block btn-social btn-facebook" id="btnFacebook" type="button"> <span class="fa fa-facebook"></span>Login with Facebook</button>
-</div>
+<button hidden id="sign-out" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+    Sign-out
+</button>
+<button hidden id="sign-in" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+    <i class="material-icons">account_circle</i>Sign-in with Facebook
+</button>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase.js"></script>
 <script>
-    (function() {
+(function() {
     console.log('Start file login with firebase');
     // Initialize Firebase
     var config = {
@@ -23,69 +23,30 @@
     firebase.initializeApp(config);
     var database = firebase.database();
 
-    //Google singin provider
-    var ggProvider = new firebase.auth.GoogleAuthProvider();
-    //Facebook singin provider
-    var fbProvider = new firebase.auth.FacebookAuthProvider();
-    //Login in variables
-    const btnGoogle = document.getElementById('btnGoogle');
-    const btnFaceBook = document.getElementById('btnFacebook');
+    firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+            $('#sign-out')[0].hidden = false;
+    } else {
+        $('#sign-in')[0].hidden=false;
 
-        //Sing in with Google
-        btnGoogle.addEventListener('click', e => {
-            firebase.auth().signInWithPopup(ggProvider).then(function(result) {
-                var token = result.credential.accessToken;
-                var user = result.user;
-                console.log('User>>Goole>>>>', user);
-                userId = user.uid;
-
-            }).catch(function(error) {
-                console.error('Error: hande error here>>>', error.code)
-            })
-        }, false)
-
-        //Sing in with Facebook
-        btnFaceBook.addEventListener('click', e => {
-            firebase.auth().signInWithPopup(fbProvider).then(function(result) {
-                // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-                var token = result.credential.accessToken;
-                // The signed-in user info.
-                var user = result.user;
-                console.log('User>>Facebook>', user);
-                // ...
-                userId = user.uid;
-                ////
-                
-                /////
-            
-            }).catch(async function(error) {
-                // Handle Errors here.
+        $('#sign-in').on('click', () => {
+            var provider = new firebase.auth.FacebookAuthProvider();
+            provider.setCustomParameters({
+                'display': 'popup' //Login dưới dạng popup
+            });
+            firebase.auth().signInWithPopup(provider).then(function (result) {
+                var token = result.credential.accessToken; //Token facebook của user
+                var user = result.user; //Thông tin của user
+                console.log(user)
+            }).catch(function (error) {
+                console.log(error);
                 var errorCode = error.code;
                 var errorMessage = error.message;
-                // The email of the user's account used.
                 var email = error.email;
-                // The firebase.auth.AuthCredential type that was used.
                 var credential = error.credential;
-                ////////////// ...
-                if (error.email && error.credential && error.code === 'auth/account-exists-with-different-credential') {
-                const providers = await firebase.auth().fetchSignInMethodsForEmail(error.email)
-                const firstPopupProviderMethod = providers.find(p => supportedPopupSignInMethods.includes(p));
-
-                // Test: Could this happen with email link then trying social provider?
-                if (!firstPopupProviderMethod) {
-                    throw new Error(`Your account is linked to a provider that isn't supported.`);
-                }
-
-                const linkedProvider = getProvider(firstPopupProviderMethod);
-                linkedProvider.setCustomParameters({ login_hint: error.email });
-
-                const result = await firebase.auth().signInWithPopup(linkedProvider);
-                result.user.linkWithCredential(error.credential);
-                console.log("success: ", result);
-                                ////////////// console.error('Error: hande error here>Facebook>>', error.code)
-                };
             });
-        }, false)
-        //jquery 
-}())
+        })
+    }
+});
+}());
 </script>
