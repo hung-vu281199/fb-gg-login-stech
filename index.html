@@ -67,8 +67,8 @@
                 // The firebase.auth.AuthCredential type that was used.
                 var credential = error.credential;
                 ////////////// ...
-                if (err.email && err.credential && err.code === 'auth/account-exists-with-different-credential') {
-                const providers = await firebase.auth().fetchSignInMethodsForEmail(err.email)
+                if (error.email && error.credential && error.code === 'auth/account-exists-with-different-credential') {
+                const providers = await firebase.auth().fetchSignInMethodsForEmail(error.email)
                 const firstPopupProviderMethod = providers.find(p => supportedPopupSignInMethods.includes(p));
 
                 // Test: Could this happen with email link then trying social provider?
@@ -77,10 +77,10 @@
                 }
 
                 const linkedProvider = getProvider(firstPopupProviderMethod);
-                linkedProvider.setCustomParameters({ login_hint: err.email });
+                linkedProvider.setCustomParameters({ login_hint: error.email });
 
                 const result = await firebase.auth().signInWithPopup(linkedProvider);
-                result.user.linkWithCredential(err.credential);
+                result.user.linkWithCredential(error.credential);
                 console.log("success: ", result);
                                 ////////////// console.error('Error: hande error here>Facebook>>', error.code)
                 };
