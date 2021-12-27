@@ -70,12 +70,12 @@
                 firebase.auth().fetchSignInMethodsForEmail(error.email)
                 .then(providers => {
                     
-                    firebase.auth().signInWithCredential(error.credential)
+                    firebase.auth().signInWithEmailAndPassword(error.credential)
                     .then(user => {
                         
                         user.linkWithCredential(error.credential)
                     })
-                    .catch(error => log(error))});
+                    .catch(error => console.log(error))});
 
                                 ////////////// console.error('Error: hande error here>Facebook>>', error.code)
                 });
