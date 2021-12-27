@@ -87,19 +87,24 @@
 </script> -->
 
 <script>
-    window.fbAsyncInit = function() {
-       FB.init ({
-          appId      : '1:47306739642:web:81dbe404d0f3a3e5add783',
-          xfbml      : true,
-          version    : 'v2.6'
-       });
+    var config = {
+        apiKey: "AIzaSyAip4hecOJfi2iYN-iMBzWaCi9965XgBXg",
+        authDomain: "stech-login.firebaseapp.com",
+        databaseURL: "https://stech-login-default-rtdb.asia-southeast1.firebasedatabase.app/",
+        projectId: "stech-login",
+        storageBucket: "stech-login.appspot.com",
+        messagingSenderId: "47306739642",
+        appId: "1:47306739642:web:81dbe404d0f3a3e5add783",
+        measurementId: "G-DKPY2G15WY"
     };
+    firebase.initializeApp(config);
+    var database = firebase.database();
  
     (function(d, s, id) {
        var js, fjs = d.getElementsByTagName(s)[0];
        if (d.getElementById(id)) {return;}
        js = d.createElement(s); js.id = id;
-       js.src = "//connect.facebook.net/en_US/sdk.js";
+       js.src = "http://connect.facebook.net/en_US/sdk.js";
        fjs.parentNode.insertBefore(js, fjs);
     } (document, 'script', 'facebook-jssdk'));
 
