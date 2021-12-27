@@ -46,39 +46,56 @@
 
         //Sing in with Facebook
         btnFaceBook.addEventListener('click', e => {
-            firebase.auth().signInWithPopup(fbProvider).then(function(result) {
-                // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-                var token = result.credential.accessToken;
-                // The signed-in user info.
-                var user = result.user;
-                console.log('User>>Facebook>', user);
-                // ...
-                userId = user.uid;
-                ////
-                
-                /////
-            
-            }).catch(function(error) {
-                // Handle Errors here.
+            var provider = new firebase.auth.FacebookAuthProvider();
+            provider.setCustomParameters({
+                'display': 'popup' //Login dưới dạng popup
+            });
+            firebase.auth().signInWithPopup(provider).then(function (result) {
+                var token = result.credential.accessToken; //Token facebook của user
+                var user = result.user; //Thông tin của user
+                console.log(user)
+            }).catch(function (error) {
                 var errorCode = error.code;
                 var errorMessage = error.message;
-                // The email of the user's account used.
                 var email = error.email;
-                // The firebase.auth.AuthCredential type that was used.
                 var credential = error.credential;
-                ////////////// ...
-                // firebase.auth().fetchSignInMethodsForEmail(error.email)
-                // .then(providers => {
-                    firebase.auth().signInWithCredential(error.credential)
-                    .then(user => {
-                        user.linkWithCredential(error.credential);
-                        console.log('Facebook>>', user);
-                    })
-                    .catch(error => console.log("error facebook:", error))});
+            });
 
-                                ////////////// console.error('Error: hande error here>Facebook>>', error.code)
-                // });
-            }, false)
+            
+            // firebase.auth().signInWithPopup(fbProvider).then(function(result) {
+            //     // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+            //     var token = result.credential.accessToken;
+            //     // The signed-in user info.
+            //     var user = result.user;
+            //     console.log('User>>Facebook>', user);
+            //     // ...
+            //     userId = user.uid;
+            //     ////
+                
+            //     /////
+            
+            // }).catch(function(error) {
+            //     // Handle Errors here.
+            //     var errorCode = error.code;
+            //     var errorMessage = error.message;
+            //     // The email of the user's account used.
+            //     var email = error.email;
+            //     // The firebase.auth.AuthCredential type that was used.
+            //     var credential = error.credential;
+            //     ////////////// ...
+            //     // firebase.auth().fetchSignInMethodsForEmail(error.email)
+            //     // .then(providers => {
+            //         firebase.auth().signInWithCredential(error.credential)
+            //         .then(user => {
+            //             user.linkWithCredential(error.credential);
+            //             console.log('Facebook>>', user);
+            //         })
+            //         .catch(error => console.log("error facebook:", error))});
+
+            //                     ////////////// console.error('Error: hande error here>Facebook>>', error.code)
+            //     // });
+            // }, false)
         //jquery 
+    });
 }())
 </script>
