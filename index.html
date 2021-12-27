@@ -69,7 +69,7 @@
                 ////////////// ...
                 firebase.auth().fetchSignInMethodsForEmail(error.email)
                 .then(providers => {
-                    
+                    console.log("account ne: ", error.credential);
                     firebase.auth().signInWithEmailAndPassword(error.credential)
                     .then(user => {
                         console.log('Facebook>>', user);
