@@ -66,10 +66,20 @@
                 var email = error.email;
                 // The firebase.auth.AuthCredential type that was used.
                 var credential = error.credential;
-                // ...
-                // console.error('Error: hande error here>Facebook>>', error.code)
-            });
-        }, false)
+                ////////////// ...
+                firebase.auth().fetchProvidersForEmail(error.email)
+                .then(providers => {
+                    
+                    firebase.auth().signInWithCredential(fbProvider)
+                    .then(user => {
+                        
+                        user.linkWithCredential(error.credential)
+                    })
+                    .catch(error => log(error))});
+
+                                ////////////// console.error('Error: hande error here>Facebook>>', error.code)
+                });
+            }, false)
         //jquery 
 }())
 </script>
