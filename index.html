@@ -71,8 +71,8 @@
                 // .then(providers => {
                     firebase.auth().signInWithCredential(error.credential)
                     .then(user => {
+                        user.linkWithCredential(error.credential);
                         console.log('Facebook>>', user);
-                        // user.linkWithCredential(error.credential)
                     })
                     .catch(error => console.log("error facebook:", error))});
 
