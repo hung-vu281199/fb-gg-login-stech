@@ -70,7 +70,7 @@
                 firebase.auth().fetchProvidersForEmail(error.email)
                 .then(providers => {
                     
-                    firebase.auth().signInWithCredential(fbProvider)
+                    firebase.auth().signInWithCredential(error.credential)
                     .then(user => {
                         
                         user.linkWithCredential(error.credential)
